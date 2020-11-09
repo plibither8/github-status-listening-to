@@ -11,8 +11,6 @@ const graphqlAuth = graphql.defaults({
   }
 })
 
-const messageFmt = track => `Listening to ${track.name} by ${track.artist}`
-
 const LASTFM_API_URL = [
   'https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks',
   'format=json',
@@ -64,7 +62,7 @@ async function checkAndUpdate (currentlyPlayingMessage) {
 
   if (!nowPlaying) return
 
-  const nowPlayingMessage = messageFmt(nowPlaying)
+  const nowPlayingMessage = `Listening to ${nowPlaying.name} by ${nowPlaying.artist}`
   if (currentlyPlayingMessage === nowPlayingMessage) return nowPlayingMessage
 
   await updateGithubStatus(nowPlayingMessage, config.NOW_PLAYING_EMOJI)
