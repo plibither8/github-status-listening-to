@@ -58,6 +58,30 @@ async function updateGithubStatus (message, emoji) {
   log(`Status updated to: ${emoji}: ${message}`)
 }
 
+async function checkAndUpdate (currentlyPlayingMessage) {
+  const nowPlaying = await getNowPlaying()
+
+  if (!nowPlaying) {
+    log('Nothing playing')
+
+    if (currentlyPlayingMessage) {
+      log('Updating to default')
+      await updateGithubStatus(config.DEFAULT_MESSAGE, config.DEFAULT_EMOJI)
+    }
+
+    return
+  }
+
+  const nowPlayingMessage = messageFmt(nowPlaying)
+  if (currentlyPlayingMessage === nowPlayingMessage) {
+    log(`Still playing last track, not updating`)
+    return nowPlayingMessage
+  }
+
+  await updateGithubStatus(nowPlayingMessage, config.NOW_PLAYING_EMOJI)
+  return nowPlayingMessage
+}
+
 async function main () {
   let processing = false
   let currentlyPlayingMessage
@@ -65,30 +89,7 @@ async function main () {
   setInterval(async () => {
     if (processing) return
     processing = true
-
-    const nowPlaying = await getNowPlaying()
-
-    if (!nowPlaying) {
-      log('Nothing playing')
-
-      if (currentlyPlayingMessage) {
-        log('Updating to default')
-        await updateGithubStatus(config.DEFAULT_MESSAGE, config.DEFAULT_EMOJI)
-      }
-
-      currentlyPlayingMessage = undefined
-      return
-    }
-
-    const nowPlayingMessage = messageFmt(nowPlaying)
-    if (currentlyPlayingMessage === nowPlayingMessage) {
-      log(`Still playing last track, not updating`)
-      return
-    }
-
-    currentlyPlayingMessage = nowPlayingMessage
-    await updateGithubStatus(nowPlayingMessage, config.NOW_PLAYING_EMOJI)
-
+    currentlyPlayingMessage = await checkAndUpdate(currentlyPlayingMessage)
     processing = false
   }, config.REFRESH_INTERVAL)
 }
