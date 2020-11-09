@@ -5,14 +5,9 @@ const log = require('fancy-log')
 const { graphql } = require('@octokit/graphql')
 const config = require('./config.json')
 
-const {
-  LASTFM_API_KEY,
-  GITHUB_TOKEN
-} = process.env
-
 const graphqlAuth = graphql.defaults({
   headers: {
-    authorization: `token ${GITHUB_TOKEN}`
+    authorization: `token ${process.env.GITHUB_TOKEN}`
   }
 })
 
@@ -23,7 +18,7 @@ const LASTFM_API_URL = [
   'format=json',
   'limit=1',
   'user=' + config.LASTFM_USERNAME,
-  'api_key=' + LASTFM_API_KEY
+  'api_key=' + process.env.LASTFM_API_KEY
 ].join('&')
 
 async function getNowPlaying () {
@@ -61,22 +56,16 @@ async function updateGithubStatus (message, emoji) {
 async function checkAndUpdate (currentlyPlayingMessage) {
   const nowPlaying = await getNowPlaying()
 
-  if (!nowPlaying) {
-    log('Nothing playing')
-
-    if (currentlyPlayingMessage) {
-      log('Updating to default')
-      await updateGithubStatus(config.DEFAULT_MESSAGE, config.DEFAULT_EMOJI)
-    }
-
+  if (!nowPlaying && currentlyPlayingMessage) {
+    log('Updating to default')
+    await updateGithubStatus(config.DEFAULT_MESSAGE, config.DEFAULT_EMOJI)
     return
   }
 
+  if (!nowPlaying) return
+
   const nowPlayingMessage = messageFmt(nowPlaying)
-  if (currentlyPlayingMessage === nowPlayingMessage) {
-    log(`Still playing last track, not updating`)
-    return nowPlayingMessage
-  }
+  if (currentlyPlayingMessage === nowPlayingMessage) return nowPlayingMessage
 
   await updateGithubStatus(nowPlayingMessage, config.NOW_PLAYING_EMOJI)
   return nowPlayingMessage
