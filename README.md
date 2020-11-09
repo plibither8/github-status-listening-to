@@ -1,4 +1,4 @@
-# github-status-listening-to
+# 🎧 github-status-listening-to
 
 > Update my GitHub status to whatever song I'm listening
 
