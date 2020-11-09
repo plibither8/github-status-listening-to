@@ -23,11 +23,15 @@ async function getNowPlaying () {
   const res = await fetch(LASTFM_API_URL)
   const json = await res.json()
 
-  const [track] = json.recenttracks.track
-  if (!(track['@attr'] && track['@attr'].nowplaying)) return
+  try {
+    const [track] = json.recenttracks.track
+    if (!(track['@attr'] && track['@attr'].nowplaying)) return
 
-  const { name, artist: { '#text': artist } } = track
-  return { name, artist }
+    const { name, artist: { '#text': artist } } = track
+    return { name, artist }
+  } catch (err) {
+    return
+  }
 }
 
 async function updateGithubStatus (message, emoji) {
