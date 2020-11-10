@@ -35,24 +35,28 @@ async function getNowPlaying () {
 }
 
 async function updateGithubStatus (message, emoji) {
-  const data = await graphqlAuth(
-    `
-      mutation($message: String, $emoji: String) {
-        changeUserStatus(input: {
-          emoji: $emoji
-          message: $message
-        }) {
-          status {
-            message
+  try {
+    const data = await graphqlAuth(
+      `
+        mutation($message: String, $emoji: String) {
+          changeUserStatus(input: {
+            emoji: $emoji
+            message: $message
+          }) {
+            status {
+              message
+            }
           }
         }
+      `, {
+        message,
+        emoji
       }
-    `, {
-      message,
-      emoji
-    }
-  )
-  log(`Status updated to: ${emoji}: ${message}`)
+    )
+    log(`Status updated to: ${emoji}: ${message}`)
+  } catch (err) {
+    console.error('An error occured :/')
+  }
 }
 
 async function checkAndUpdate (currentlyPlayingMessage) {
