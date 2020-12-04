@@ -20,10 +20,10 @@ const LASTFM_API_URL = [
 ].join('&')
 
 async function getNowPlaying () {
-  const res = await fetch(LASTFM_API_URL)
-  const json = await res.json()
-
   try {
+    const res = await fetch(LASTFM_API_URL)
+    const json = await res.json()
+
     const [track] = json.recenttracks.track
     if (!(track['@attr'] && track['@attr'].nowplaying)) return
 
