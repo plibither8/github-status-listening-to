@@ -114,7 +114,7 @@ async function checkAndUpdate(
   }
 
   // Finally, update if song change
-  await updateGithubStatus(nowPlayingMessage, config.defaultEmoji);
+  await updateGithubStatus(nowPlayingMessage, config.nowPlayingEmoji);
   return nowPlayingMessage;
 }
 
