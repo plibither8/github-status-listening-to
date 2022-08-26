@@ -1,5 +1,3 @@
-import "dotenv/config.js";
-
 type Emoji = `:${string}:`;
 
 interface Config {

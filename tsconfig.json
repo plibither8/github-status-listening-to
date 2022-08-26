@@ -1,19 +1,9 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "module": "ES2020",
+    "lib": ["ESNext"],
+    "module": "esnext",
+    "target": "esnext",
     "moduleResolution": "node",
-    "noEmit": false,
-    "outDir": "dist",
-    "resolveJsonModule": true,
-    "sourceMap": true,
-    "target": "es6",
-    "baseUrl": ".",
-    "rootDir": "./src",
-    "paths": {
-      "src/*": ["./src/*"]
-    }
-  },
-  "lib": ["ESNext"],
-  "include": ["src/**/*.ts"]
+    "types": ["bun-types"]
+  }
 }

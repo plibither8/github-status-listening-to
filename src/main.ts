@@ -1,5 +1,4 @@
 import { graphql } from "@octokit/graphql";
-import got from "got";
 import config from "./config.js";
 
 interface NowPlaying {
@@ -48,7 +47,8 @@ const LASTFM_API_URL = getLastfmEndpoint();
 
 async function getNowPlayingFromLastfm(): Promise<NowPlaying> {
   try {
-    const data = await got(LASTFM_API_URL).json<LastfmResponse>();
+    const res = await fetch(LASTFM_API_URL);
+    const data = (await res.json()) as LastfmResponse;
     const [track] = data.recenttracks.track;
 
     // No track is playing right now
