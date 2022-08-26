@@ -1,4 +1,3 @@
-import { graphql } from "@octokit/graphql";
 import config from "./config.js";
 
 interface NowPlaying {
@@ -16,11 +15,7 @@ interface LastfmResponse {
   };
 }
 
-const graphqlWithAuth = graphql.defaults({
-  headers: {
-    authorization: `token ${config.githubApiToken}`,
-  },
-});
+const GITHUB_GRAPHQL_API = "https://api.github.com/graphql";
 
 const log = (message: string, type: "log" | "error" = "log") => {
   const time = new Date().toTimeString().substring(0, 8);
@@ -79,9 +74,16 @@ async function updateGithubStatus(message: string, emoji: string) {
     }
   `;
   try {
-    await graphqlWithAuth(MUTATE_STATUS, {
-      message,
-      emoji,
+    await fetch(GITHUB_GRAPHQL_API, {
+      method: "POST",
+      headers: {
+        Authorization: `bearer ${config.githubApiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: MUTATE_STATUS,
+        variables: { message, emoji },
+      }),
     });
     log(`Status updated to: ${emoji} ${message}`);
   } catch (err) {

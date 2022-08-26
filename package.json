@@ -1,7 +1,6 @@
 {
   "name": "github-status-listening-to",
   "module": "src/main.ts",
-  "type": "module",
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.10.0",
     "@typescript-eslint/parser": "^5.10.0",
@@ -10,7 +9,5 @@
     "eslint-plugin-prettier": "^4.0.0",
     "bun-types": "^0.1.0"
   },
-  "dependencies": {
-    "@octokit/graphql": "^5.0.1"
-  }
+  "type": "module"
 }
