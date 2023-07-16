@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "./config";
 
 interface NowPlaying {
   song: string;
@@ -47,9 +47,13 @@ async function getNowPlayingFromLastfm(): Promise<NowPlaying> {
     const [track] = data.recenttracks.track;
 
     // No track is playing right now
-    if (!track["@attr"]?.nowplaying) return undefined;
+    if (!track["@attr"]?.nowplaying) {
+      log("[Last.fm] No track is playing right now");
+      return undefined;
+    }
 
     // Return track info
+    log(`[Last.fm] ${track.name} by ${track.artist["#text"]}`);
     return {
       song: track.name,
       artist: track.artist["#text"],
@@ -85,7 +89,7 @@ async function updateGithubStatus(message: string, emoji: string) {
         variables: { message, emoji },
       }),
     });
-    log(`Status updated to: ${emoji} ${message}`);
+    log(`[GitHub] Status updated to: ${emoji} ${message}`);
   } catch (err) {
     log(String(err), "error");
   }

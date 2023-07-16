@@ -9,5 +9,8 @@
     "eslint-plugin-prettier": "^4.0.0",
     "bun-types": "^0.1.0"
   },
-  "type": "module"
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.3.1"
+  }
 }
