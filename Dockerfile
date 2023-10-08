@@ -4,7 +4,7 @@ COPY package.json ./
 COPY bun.lockb ./
 COPY src/ ./
 
-RUN bun install
+RUN bun install --production
 
 ENV GITHUB_API_TOKEN=""
 ENV LASTFM_API_TOKEN=""
